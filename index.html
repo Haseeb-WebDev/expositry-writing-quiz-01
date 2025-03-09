@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Report Writing Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8">
+        <h1 class="text-3xl font-bold text-center mb-8 text-blue-600">Expositry Writing Quiz-01</h1>
+        
+        <div id="quiz-container" class="space-y-8"></div>
+        
+        <div class="text-center mt-8">
+            <button onclick="submitQuiz()" 
+                    class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                    id="submit-btn" disabled>
+                Submit Quiz
+            </button>
+        </div>
+        
+        <div id="results" class="hidden mt-8 space-y-8"></div>
+    </div>
+
+<script>
+const quizData = [
+    {
+        question: "Which one of the following generally validates a report’s methodology?",
+        options: ["Research questions", "Testing", "Composing executive summary", "Formatting"],
+        correct: 1,
+        explanation: "Testing validates methodology by verifying the reliability and validity of research methods."
+    },
+    {
+        question: "What is the purpose of conclusion section in a report?",
+        options: ["Conciseness", "stating the objectives", "problem statement", "summary of all findings"],
+        correct: 3,
+        explanation: "The conclusion summarizes key findings and their implications."
+    },
+    {
+        question: "Which of the following is generally written after writing all the chapters of a report?",
+        options: ["Report", "Memo", "Executive summary", "Email"],
+        correct: 2,
+        explanation: "Executive summary is written last as it summarizes the entire document."
+    },
+    {
+        question: "Which of the following types of audience is interested in the executive summary of a report?",
+        options: ["lay audience", "managerial readers", "technical readers", "general readers"],
+        correct: 1,
+        explanation: "Managerial readers typically prefer executive summaries for quick overview."
+    },
+    {
+        question: "Which section of a report sums up the results?",
+        options: ["Design and procedure", "Results and discussion", "Conclusion", "Introduction"],
+        correct: 2,
+        explanation: "Conclusion section provides final summary and interpretation."
+    },
+    {
+        question: "Which type of readers have sufficient knowledge with respect to subject matter?",
+        options: ["General reader", "Senior reader", "Technical reader", "Managerial reader", "Administrative reader"],
+        correct: 2,
+        explanation: "Technical readers possess specialized knowledge in the subject area."
+    },
+    {
+        question: "Which of the following is NOT a convention for writing a report?",
+        options: ["Objectivity", "Use of first person (I, We)", "Use of active voice", "Referencing"],
+        correct: 1,
+        explanation: "Reports typically use third person for objectivity."
+    },
+    {
+        question: "As CEO, which part of the report would be your first reading?",
+        options: ["Methodology", "Conclusion", "Introduction", "Executive Summary"],
+        correct: 3,
+        explanation: "Executives typically start with executive summary for quick overview."
+    },
+    {
+        question: "What is the role of writing a scope of a report?",
+        options: ["Generalize findings", "Help write conclusion", "Draw clear boundaries", "Restrict to title domain"],
+        correct: 2,
+        explanation: "Scope defines the boundaries and limitations of the research."
+    },
+    {
+        question: "Which is NOT included in Table of Contents?",
+        options: ["First level headings", "Topic of the Report", "Second level headings", "Third level headings"],
+        correct: 1,
+        explanation: "Table of Contents lists headings but not the report topic itself."
+    },
+    {
+        question: "Supplementary materials in report appendices are called?",
+        options: ["Recommendations", "Conclusions", "Appendices", "Findings"],
+        correct: 2,
+        explanation: "Appendices contain supplementary material like questionnaires."
+    },
+    {
+        question: "Which does NOT qualify as report purpose?",
+        options: ["To influence", "To dictate", "To inform", "To initiate"],
+        correct: 1,
+        explanation: "Reports inform and analyze, not dictate."
+    },
+    {
+        question: "What should NOT be used in abstract?",
+        options: ["Purpose description", "Outcomes with results", "Abbreviations", "Methodology"],
+        correct: 2,
+        explanation: "Avoid abbreviations in abstracts without definitions."
+    },
+    {
+        question: "Which should be preferred in reports?",
+        options: ["Abbreviations", "Active verbs", "Jargon", "Unfamiliar words"],
+        correct: 1,
+        explanation: "Active verbs make writing clearer and more direct."
+    },
+    {
+        question: "What is technical writing?",
+        options: ["Subjective interpretation", "Scientific inquiry", "Verbal communication", "Making questionnaires"],
+        correct: 1,
+        explanation: "Technical writing involves systematic, scientific communication."
+    }
+];
+
+let userAnswers = new Array(quizData.length).fill(null);
+
+function createQuiz() {
+    const container = document.getElementById('quiz-container');
+    
+    quizData.forEach((q, index) => {
+        const questionHTML = `
+            <div class="question-card p-6 rounded-lg bg-gray-50 border border-gray-200">
+                <h3 class="text-lg font-semibold mb-4">${index + 1}. ${q.question}</h3>
+                <div class="options-grid grid gap-3">
+                    ${q.options.map((opt, i) => `
+                        <div class="option-item p-3 rounded cursor-pointer border transition-all 
+                                  ${userAnswers[index] === i ? 'bg-blue-100 border-blue-400' : 'hover:border-blue-300'}"
+                             onclick="selectAnswer(${index}, ${i})">
+                            ${String.fromCharCode(97 + i)}: ${opt}
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        container.innerHTML += questionHTML;
+    });
+}
+
+function selectAnswer(questionIndex, optionIndex) {
+    userAnswers[questionIndex] = optionIndex;
+    document.querySelectorAll(`.question-card:nth-child(${questionIndex + 1}) .option-item`)
+             .forEach(el => el.classList.remove('bg-blue-100', 'border-blue-400'));
+    
+    const selectedOption = document.querySelector(
+        `.question-card:nth-child(${questionIndex + 1}) .option-item:nth-child(${optionIndex + 1})`
+    );
+    selectedOption.classList.add('bg-blue-100', 'border-blue-400');
+    
+    document.getElementById('submit-btn').disabled = userAnswers.includes(null);
+}
+
+function submitQuiz() {
+    const resultsContainer = document.getElementById('results');
+    resultsContainer.innerHTML = '';
+    resultsContainer.classList.remove('hidden');
+
+    quizData.forEach((q, index) => {
+        const resultHTML = `
+            <div class="result-card p-6 rounded-lg ${userAnswers[index] === q.correct ? 'bg-green-50' : 'bg-red-50'} border ${userAnswers[index] === q.correct ? 'border-green-400' : 'border-red-400'}">
+                <h3 class="text-lg font-semibold mb-2">${index + 1}. ${q.question}</h3>
+                <p class="mb-2"><strong>Your answer:</strong> 
+                    <span class="${userAnswers[index] === q.correct ? 'text-green-600' : 'text-red-600'}">
+                        ${q.options[userAnswers[index]]}
+                    </span>
+                    ${userAnswers[index] !== q.correct ? `<span class="text-green-600 ml-2">(Correct: ${q.options[q.correct]})</span>` : ''}
+                </p>
+                <p class="text-gray-600">${q.explanation}</p>
+            </div>
+        `;
+        resultsContainer.innerHTML += resultHTML;
+    });
+
+    window.scrollTo({ top: 3500, behavior: 'smooth' });
+}
+
+// Initialize quiz
+createQuiz();
+</script>
+
+<style>
+.options-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.option-item {
+    transition: all 0.2s ease;
+}
+
+.question-card {
+    transition: transform 0.2s ease;
+}
+
+.question-card:hover {
+    transform: translateY(-2px);
+}
+</style>
+</body>
+</html>
